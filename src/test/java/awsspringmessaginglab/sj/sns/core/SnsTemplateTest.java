@@ -1,23 +1,20 @@
 package awsspringmessaginglab.sj.sns.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import awsspringmessaginglab.sj.sns.Matchers;
-import io.awspring.cloud.sns.core.DefaultTopicArnResolver;
 import io.awspring.cloud.sns.core.SnsTemplate;
-import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.CreateTopicRequest;
 import software.amazon.awssdk.services.sns.model.CreateTopicResponse;
-import software.amazon.awssdk.services.sns.model.PublishRequest;
 
 @Slf4j
 public class SnsTemplateTest {
@@ -29,9 +26,9 @@ public class SnsTemplateTest {
 
     @BeforeEach
     void init() {
-        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-        converter.setSerializedPayloadClass(String.class);
-        snsTemplate = new SnsTemplate(snsClient, new DefaultTopicArnResolver(snsClient), converter);
+//        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+//        converter.setSerializedPayloadClass(String.class);
+        snsTemplate = new SnsTemplate(snsClient);
 
         when(snsClient.createTopic(CreateTopicRequest.builder().name("topic name").build()))
             .thenReturn(CreateTopicResponse.builder().topicArn(TOPIC_ARN).build());
@@ -43,8 +40,7 @@ public class SnsTemplateTest {
 
 
         @Test
-        void sendTextMessage() {
-            log.info("SnsTemplate.sendNotification() Test");
+        void sendTextMessage() throws InterruptedException {
             snsTemplate.sendNotification("topic name", "message content", "subject");
 
             verify(snsClient).publish(Matchers.requestMatches(r -> {
@@ -55,8 +51,5 @@ public class SnsTemplateTest {
                 assertThat(r.messageAttributes().keySet()).contains(MessageHeaders.TIMESTAMP);
             }));
         }
-
     }
-
-
 }

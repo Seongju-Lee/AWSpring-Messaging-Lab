@@ -1,4 +1,4 @@
-package awsspringmessaginglab.sj.sns;
+package awsspringmessaginglab.sj.support;
 
 import static org.mockito.ArgumentMatchers.argThat;
 

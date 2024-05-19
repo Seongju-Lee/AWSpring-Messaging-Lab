@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: sj
+
+cloud:
+  aws:
+    region:
+      static: us-east-1
+    credentials:
+      accessKey: test
+      secretKey: test

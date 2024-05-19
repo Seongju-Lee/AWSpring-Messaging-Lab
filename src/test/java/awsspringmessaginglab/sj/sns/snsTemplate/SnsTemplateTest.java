@@ -1,11 +1,11 @@
-package awsspringmessaginglab.sj.sns.core;
+package awsspringmessaginglab.sj.sns.snsTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import awsspringmessaginglab.sj.sns.Matchers;
+import awsspringmessaginglab.sj.support.Matchers;
 import io.awspring.cloud.sns.core.SnsTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;

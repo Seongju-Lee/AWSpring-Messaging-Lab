@@ -24,7 +24,7 @@ import software.amazon.awssdk.services.sns.model.CreateTopicResponse;
 @Slf4j
 public class StandardSnsTemplateTest {
 
-    private static final String TOPIC_ARN = "arn:aws:sns:ap-northeast-2:123456789012:test-sns";
+    private static final String TOPIC_ARN = "arn:aws:sns:ap-northeast-2:123456789012:test-topic";
 
     private final SnsClient snsClient = mock(SnsClient.class);
     private ObjectMapper objectMapper;
@@ -32,11 +32,9 @@ public class StandardSnsTemplateTest {
 
     @BeforeEach
     void init() {
-//        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-//        converter.setSerializedPayloadClass(String.class);
         snsTemplate = new SnsTemplate(snsClient);
         objectMapper = new ObjectMapper();
-        when(snsClient.createTopic(CreateTopicRequest.builder().name("topic name").build()))
+        when(snsClient.createTopic(CreateTopicRequest.builder().name("test-topic").build()))
             .thenReturn(CreateTopicResponse.builder().topicArn(TOPIC_ARN).build());
     }
 
@@ -47,7 +45,7 @@ public class StandardSnsTemplateTest {
 
         @Test
         void text_전송() throws InterruptedException {
-            snsTemplate.sendNotification("topic name", "message content", "subject");
+            snsTemplate.sendNotification("test-topic", "message content", "subject");
 
             verify(snsClient).publish(Matchers.requestMatches(r -> {
                 assertThat(r.topicArn()).isEqualTo(TOPIC_ARN);
@@ -63,7 +61,7 @@ public class StandardSnsTemplateTest {
         void 객체_그대로_전송() throws InterruptedException, JsonProcessingException {
             final Person person = PersonFixture.person("lee", 27);
             final String expectedMessage = objectMapper.writeValueAsString(person);
-            snsTemplate.sendNotification("topic name", person, "subject");
+            snsTemplate.sendNotification("test-topic", person, "subject");
 
             verify(snsClient).publish(Matchers.requestMatches(r -> {
                 // 의도와는 다르게 toString() 메서드가 적용된 모습이다.
@@ -78,7 +76,7 @@ public class StandardSnsTemplateTest {
             final Person person = PersonFixture.person("lee", 27);
             final String expectedMessage = objectMapper.writeValueAsString(person);
             // Person 객체를 JSON 형식으로 변환하여 payload로써 전달한다.
-            snsTemplate.sendNotification("topic name", expectedMessage, "subject");
+            snsTemplate.sendNotification("test-topic", expectedMessage, "subject");
 
             verify(snsClient).publish(Matchers.requestMatches(r -> {
                 assertThat(r.message()).isEqualTo(expectedMessage);

@@ -19,7 +19,7 @@ import software.amazon.awssdk.services.sns.model.PublishRequest;
 import software.amazon.awssdk.services.sns.model.PublishResponse;
 
 
-public class SnsTemplateConfigTest extends IntegrationTest {
+public class StandardSnsTemplateIntegrationTest extends IntegrationTest {
 
     private SnsTemplate snsTemplate;
     private SnsClient snsClient;
@@ -36,7 +36,6 @@ public class SnsTemplateConfigTest extends IntegrationTest {
             defaultRegion = Region.of(LOCAL_STACK_CONTAINER.getRegion());
             defaultEndpoint = LOCAL_STACK_CONTAINER.getEndpointOverride(SNS);
         }
-
 
         @Test
         void 기본값() {

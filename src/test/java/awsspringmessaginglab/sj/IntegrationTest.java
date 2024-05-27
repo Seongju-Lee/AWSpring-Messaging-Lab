@@ -11,7 +11,7 @@ import org.testcontainers.utility.DockerImageName;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Testcontainers
-public class IntegrationTest {
+public abstract class IntegrationTest {
 
     @Container
     protected static final LocalStackContainer LOCAL_STACK_CONTAINER = new LocalStackContainer(
